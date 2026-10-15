@@ -1,13 +1,19 @@
-from pydantic import BaseModel
+from datetime import datetime
+from uuid import UUID
+
+from pydantic import BaseModel, Field, HttpUrl
 
 
-class CardDTO(BaseModel):
-    id: str
-    name: str
-    link: str | None = None
-    owner: str
-    likes: bool | None = None
-    createdAt: str
+class CreateCardDTO(BaseModel):
+    name: str = Field(min_length=2, max_length=30)
+    link: HttpUrl
+
+
+class CardDTO(CreateCardDTO):
+    id: UUID
+    owner: UUID
+    likes: list[UUID] = Field(default_factory=list)
+    created_at: datetime
 
 
 # name: {
