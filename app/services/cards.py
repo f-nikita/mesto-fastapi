@@ -1,28 +1,47 @@
+from uuid import UUID
+
 from fastapi import HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.constants import CARD_IS_NOT_DEFINED
 from app.data.cards import fake_cards_db
+from app.models.card import CardModel
+from app.models.user import UserModel
 from app.schemas.card import CardDTO
 
 
-def get_all_cards():
-    return list(fake_cards_db.values())
+async def get_all_cards(session: AsyncSession) -> list[CardModel]:
+    result = await session.execute(select(CardModel))
+    return list(result.scalars().all())
 
 
-def get_card_by_id(card_id: str):
-    card = fake_cards_db.get(card_id)
+async def get_card_by_id(card_id: UUID, session: AsyncSession):
+    card = await session.get(CardModel, card_id)
 
     if card is None:
-        raise HTTPException(status_code=404, detail=CARD_IS_NOT_DEFINED)
+        raise HTTPException(status_code=401, detail=CARD_IS_NOT_DEFINED)
 
     return card
 
 
-def create_card(item: CardDTO):
-    new_id = str(len(fake_cards_db) + 1)
-    new_card = item.model_copy(update={"id": new_id})
-    fake_cards_db[new_id] = new_card
-    return new_card
+async def create_card(
+    item: CardDTO,
+    current_user: UserModel,
+    session: AsyncSession,
+) -> CardModel:
+
+    card = CardModel(
+        name=item.name,
+        link=item.link,
+        owner_id=current_user,
+    )
+
+    session.add(card)
+    await session.commit()
+    await session.refresh(card)
+
+    return card
 
 
 def delete_card(card_id: str):
