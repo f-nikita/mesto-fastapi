@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from app.constants import CARD_IS_NOT_DEFINED
 from app.data.cards import fake_cards_db
-from app.schemas.card import Card
+from app.schemas.card import CardDTO
 
 
 def get_all_cards():
@@ -18,7 +18,7 @@ def get_card_by_id(card_id: str):
     return card
 
 
-def create_card(item: Card):
+def create_card(item: CardDTO):
     new_id = str(len(fake_cards_db) + 1)
     new_card = item.model_copy(update={"id": new_id})
     fake_cards_db[new_id] = new_card

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Card(BaseModel):
+class CardDTO(BaseModel):
     id: str
     name: str
     link: str | None = None

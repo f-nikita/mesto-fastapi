@@ -1,7 +1,7 @@
-from app.schemas.card import Card
+from app.schemas.card import CardDTO
 
-fake_cards_db: dict[str, Card] = {
-    "1": Card(
+fake_cards_db: dict[str, CardDTO] = {
+    "1": CardDTO(
         id="1",
         name="Nikitos",
         link=None,
@@ -9,7 +9,7 @@ fake_cards_db: dict[str, Card] = {
         likes=False,
         createdAt="Frontend developer",
     ),
-    "2": Card(
+    "2": CardDTO(
         id="2",
         name="Место",
         link="https://example.com/image.jpg",

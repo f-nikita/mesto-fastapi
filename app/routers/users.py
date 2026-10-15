@@ -1,20 +1,20 @@
 from fastapi import APIRouter
 
 from app.constants import USER_IS_NOT_DEFINED
-from app.schemas.user import UpdateAvatar, UpdateUser, User
+from app.schemas.user import UpdateAvatarDTO, UpdateUserDTO, UserDTO
 from app.services import users as user_services
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("", response_model=list[User])
+@router.get("", response_model=list[UserDTO])
 async def get_all_users():
     return user_services.get_all_users()
 
 
 @router.get(
     "/me",
-    response_model=User,
+    response_model=UserDTO,
     responses={404: {"description": USER_IS_NOT_DEFINED}},
 )
 async def get_profile():
@@ -23,7 +23,7 @@ async def get_profile():
 
 @router.get(
     "/{user_id}",
-    response_model=User,
+    response_model=UserDTO,
     responses={404: {"description": USER_IS_NOT_DEFINED}},
 )
 async def get_profile_by_id(user_id: str):
@@ -32,17 +32,17 @@ async def get_profile_by_id(user_id: str):
 
 @router.patch(
     "/me",
-    response_model=UpdateUser,
+    response_model=UserDTO,
     responses={404: {"description": USER_IS_NOT_DEFINED}},
 )
-async def update_profile(update_data: UpdateUser):
+async def update_profile(update_data: UpdateUserDTO):
     return user_services.update_profile(update_data)
 
 
 @router.patch(
     "/me/avatar",
-    response_model=UpdateUser,
+    response_model=UpdateAvatarDTO,
     responses={404: {"description": USER_IS_NOT_DEFINED}},
 )
-async def update_profile_avatar(update_data: UpdateAvatar):
+async def update_profile_avatar(update_data: UpdateAvatarDTO):
     return user_services.update_profile_avatar(update_data)

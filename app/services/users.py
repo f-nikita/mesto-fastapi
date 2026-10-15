@@ -2,7 +2,7 @@ from fastapi import HTTPException
 
 from app.constants import USER_IS_NOT_DEFINED
 from app.data.users import fake_users_db
-from app.schemas.user import UpdateAvatar, UpdateUser
+from app.schemas.user import UpdateAvatarDTO, UpdateUserDTO
 
 
 def get_all_users():
@@ -27,7 +27,7 @@ def get_profile_by_id(user_id: str):
     return user
 
 
-def update_profile(update_data: UpdateUser):
+def update_profile(update_data: UpdateUserDTO):
     current_user = fake_users_db.get("1")
 
     if current_user is None:
@@ -42,7 +42,7 @@ def update_profile(update_data: UpdateUser):
     return updated_user
 
 
-def update_profile_avatar(update_data: UpdateAvatar):
+def update_profile_avatar(update_data: UpdateAvatarDTO):
     current_user = fake_users_db.get("1")
 
     if current_user is None:
